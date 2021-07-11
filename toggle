@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+
+#LAST INDEX OF AUDIO OUTPUT SINKS
+total_sinks=$(pacmd list-sinks | grep -o -P 'index.{0,3}'| tail -1 | awk '{print $2}')
+
+
+#INDEX OF CURRENT DEFAULT SINK
+current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
+
+#CHANGE DEFAULT SINK
+if [ $current_sink_index -lt $total_sinks ]; then
+		
+	default_sink=$(pacmd list-sinks |grep "index" | grep -A 1 "index: $current_sink_index" | tail -1 | awk '{print $2}')
+	pacmd set-default-sink $default_sink 
+
+else
+	
+	pacmd set-default-sink 0
+
+fi
