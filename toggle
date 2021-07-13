@@ -17,6 +17,6 @@ if [ $current_sink_index -lt $total_sinks ]; then
 
 else
 	default_sink=$(pacmd list-sinks | grep -o -P 'index.{0,3}'| head -1 | awk '{print $2}')
-	pacmd set-default-sink default_sink
+	pacmd set-default-sink $default_sink
 
 fi
