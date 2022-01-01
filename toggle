@@ -3,7 +3,7 @@
 
 
 #LAST INDEX OF AUDIO OUTPUT SINKS
-total_sinks=$(pacmd list-sinks | grep -o -P 'index.{0,3}'| tail -1 | awk '{print $2}')
+total_sinks=$(pacmd list-sinks | grep -o -P 'index.{0,}'| tail -1 | awk '{print $2}')
 
 
 #INDEX OF CURRENT DEFAULT SINK
@@ -16,7 +16,7 @@ if [ $current_sink_index -lt $total_sinks ]; then
 	pacmd set-default-sink $default_sink 
 
 else
-	default_sink=$(pacmd list-sinks | grep -o -P 'index.{0,3}'| head -1 | awk '{print $2}')
+	default_sink=$(pacmd list-sinks | grep -o -P 'index.{0,}'| head -1 | awk '{print $2}')
 	pacmd set-default-sink $default_sink
 
 fi
