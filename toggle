@@ -18,7 +18,7 @@ if [ $current_sink_index -lt $total_sinks ]; then
 	current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
 	    
 	#this is needed in case sink fails to change
-	while [ $current_sink_index -ne $default_sink ]
+	while [ $current_sink_index -ne $default_sink ]  && [ $default_sink -le $total_sinks ]
 	do
 
 	    let "default_sink+=1"
@@ -34,7 +34,7 @@ else
     current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
 
     #this is needed in case sink fails to change
-    while [ $current_sink_index -ne $default_sink ]
+    while [ $current_sink_index -ne $default_sink ]  && [ $default_sink -le $total_sinks ]
     do
 
 	let "default_sink+=1"
