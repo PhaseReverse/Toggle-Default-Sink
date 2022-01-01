@@ -10,13 +10,38 @@ total_sinks=$(pacmd list-sinks | grep -o -P 'index.{0,}'| tail -1 | awk '{print 
 current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
 
 #CHANGE DEFAULT SINK
+
 if [ $current_sink_index -lt $total_sinks ]; then
 		
-	default_sink=$(pacmd list-sinks |grep "index" | grep -A 1 "index: $current_sink_index" | tail -1 | awk '{print $2}')
-	pacmd set-default-sink $default_sink 
+	default_sink=$(pacmd list-sinks |grep "index" | grep -m 1 -A 1 "index: $current_sink_index" | tail -1 | awk '{print $2}')
+	pacmd set-default-sink $default_sink
+	current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
+	    
+	#this is needed in case sink fails to change
+	while [ $current_sink_index -ne $default_sink ]
+	do
+
+	    let "default_sink+=1"
+	    pacmd set-default-sink $default_sink
+	    current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
+	done
 
 else
-	default_sink=$(pacmd list-sinks | grep -o -P 'index.{0,}'| head -1 | awk '{print $2}')
+    
+    default_sink=$(pacmd list-sinks | grep -o -P 'index.{0,}'| head -1 | awk '{print $2}')
+   
+    pacmd set-default-sink $default_sink
+    current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
+
+    #this is needed in case sink fails to change
+    while [ $current_sink_index -ne $default_sink ]
+    do
+
+	let "default_sink+=1"
 	pacmd set-default-sink $default_sink
+	current_sink_index="$(pacmd list-sinks | grep -e "index" | grep -A 1 "* index" | awk '{print $3}')"
+    done
+	    
+	
 
 fi
